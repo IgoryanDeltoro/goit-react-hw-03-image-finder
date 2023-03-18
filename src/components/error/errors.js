@@ -1,4 +1,4 @@
-import { Notify, Report } from 'notiflix';
+import { Report } from 'notiflix';
 
 export default function Error() {
   Report.info(
