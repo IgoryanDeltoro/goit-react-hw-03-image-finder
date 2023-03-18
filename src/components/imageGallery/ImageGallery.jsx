@@ -48,7 +48,7 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { articles, status, page } = this.state;
+    const { articles, status } = this.state;
     if (status === STATUS.IDLE) {
     } else if (status === STATUS.PENDING) {
       return (
