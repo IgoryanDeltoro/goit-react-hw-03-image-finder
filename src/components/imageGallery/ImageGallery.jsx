@@ -5,20 +5,18 @@ import { Component } from 'react';
 import css from '../imageGallery/ImageGallery.module.css';
 import ImageGalleryItem from './imageGalleryItem/ImageGalleryItem';
 import Button from 'components/button/Button';
-
-const STATUS = {
-  IDLE: 'idle',
-  PENDING: 'pending',
-  REJECTED: 'rejected',
-  RESOLVED: 'resolved',
-};
+import modal from 'components/modal/modal';
 
 class ImageGallery extends Component {
   state = {
     articles: [],
-    status: STATUS.IDLE,
+    isLoading: false,
     page: 1,
   };
+
+  componentDidMount() {
+    window.addEventListener('click', this.hendleOpeningModal);
+  }
 
   async componentDidUpdate(prevProps, prevState) {
     const currentNume = this.props.searchValue;
@@ -26,48 +24,56 @@ class ImageGallery extends Component {
     const currentPage = this.state.page;
     const prevPage = prevState.page;
     const { page } = this.state;
-    console.log(currentNume !== prevName || currentPage !== prevPage);
+
     if (currentNume !== prevName || currentPage !== prevPage) {
-      this.setState({ status: STATUS.PENDING });
-      console.log('запрос');
+      this.setState({ isLoading: true });
       try {
         const response = await apiQueries(currentNume, page);
         if (response.data.hits.length === 0) {
-          return this.setState({ status: STATUS.REJECTED });
+          Error();
         }
-        this.setState({ articles: response.data.hits });
-        this.setState({ status: STATUS.RESOLVED });
+        this.setState(prev => ({
+          articles: [...prev.articles, ...response.data.hits],
+        }));
+        this.setState({ isLoading: false });
       } catch (error) {
         console.log(error);
       }
     }
   }
 
+  componentWillUnmount() {
+    window.removeEventListener('click', this.hendleOpeningModal);
+  }
+
+  hendleOpeningModal = event => {
+    const { articles } = this.state;
+    const { src } = event.target;
+    if (event.target.nodeName === 'IMG') {
+      const filtred = articles.find(el => el.webformatURL === src);
+      modal(filtred);
+    }
+  };
+
   hendleLoadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   render() {
-    const { articles, status } = this.state;
-    if (status === STATUS.IDLE) {
-    } else if (status === STATUS.PENDING) {
-      return (
+    const { articles, isLoading } = this.state;
+    return (
+      <>
+        <ul className={css.gallery}>
+          <ImageGalleryItem articles={articles} />
+        </ul>
         <div className={css.loading}>
-          <Loading />
+          <Loading pending={isLoading} />
         </div>
-      );
-    } else if (status === STATUS.REJECTED) {
-      Error();
-    } else if (status === STATUS.RESOLVED) {
-      return (
-        <>
-          <ul className={css.gallery}>
-            <ImageGalleryItem articles={articles} />
-          </ul>
-          <Button loadMore={this.hendleLoadMore} />
-        </>
-      );
-    }
+        {articles.length > 1 && (
+          <> {!isLoading && <Button loadMore={this.hendleLoadMore} />}</>
+        )}
+      </>
+    );
   }
 }
 
