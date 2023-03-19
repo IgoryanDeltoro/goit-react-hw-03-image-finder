@@ -24,7 +24,9 @@ class ImageGallery extends Component {
     const currentPage = this.state.page;
     const prevPage = prevState.page;
     const { page } = this.state;
-
+    if (currentNume !== prevName) {
+      this.setState({ articles: [] });
+    }
     if (currentNume !== prevName || currentPage !== prevPage) {
       this.setState({ isLoading: true });
       try {
