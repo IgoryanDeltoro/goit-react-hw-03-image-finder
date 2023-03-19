@@ -9,7 +9,7 @@ function modal(img) {
   const instance = basicLightbox.create(
     `<div class='backdrop'>
       <div class='modal'>
-       <img src="${img.largeImageURL}" width="800" height="600">
+       <img src="${img.largeImageURL}">
       </div>
     </div>
 `,
