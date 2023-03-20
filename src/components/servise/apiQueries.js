@@ -7,7 +7,7 @@ const apiQueries = async (currentNume, page) => {
   const response = await axios.get(
     `${BASE_URL}?q=${currentNume}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
   );
-  return response;
+  return response.data;
 };
 
 export default apiQueries;

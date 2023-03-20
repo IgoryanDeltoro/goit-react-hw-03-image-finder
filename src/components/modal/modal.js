@@ -29,11 +29,10 @@ function modal(img) {
   body.classList.toggle('no-scroll');
 
   function hendleEventKeydown(event) {
-    if (event.code !== 'Escape' && event.target.nodeName === 'IMG') {
-      return;
+    if (event.code === 'Escape' || event.target.nodeName === 'DIV') {
+      instance.close();
+      body.classList.remove('no-scroll');
     }
-    instance.close();
-    body.classList.remove('no-scroll');
   }
 }
 export default modal;

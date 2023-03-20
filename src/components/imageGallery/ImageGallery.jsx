@@ -1,4 +1,3 @@
-import Error from '../error/errors';
 import Loading from 'components/loading/Loading';
 import apiQueries from 'components/servise/apiQueries';
 import { Component } from 'react';
@@ -6,12 +5,16 @@ import css from '../imageGallery/ImageGallery.module.css';
 import ImageGalleryItem from './imageGalleryItem/ImageGalleryItem';
 import Button from 'components/button/Button';
 import modal from 'components/modal/modal';
+import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 class ImageGallery extends Component {
   state = {
     articles: [],
     isLoading: false,
     page: 1,
+    totalPaginate: 0,
   };
 
   componentDidMount() {
@@ -31,11 +34,12 @@ class ImageGallery extends Component {
       this.setState({ isLoading: true });
       try {
         const response = await apiQueries(currentNume, page);
-        if (response.data.hits.length === 0) {
-          Error();
+        this.setState({ totalPaginate: Math.ceil(response.totalHits / 12) });
+        if (response.hits.length === 0) {
+          toast('Sorry, There are no images!');
         }
         this.setState(prev => ({
-          articles: [...prev.articles, ...response.data.hits],
+          articles: [...prev.articles, ...response.hits],
         }));
         this.setState({ isLoading: false });
       } catch (error) {
@@ -62,7 +66,8 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { articles, isLoading } = this.state;
+    const { articles, isLoading, page, totalPaginate } = this.state;
+
     return (
       <>
         <ul className={css.gallery}>
@@ -71,12 +76,16 @@ class ImageGallery extends Component {
         <div className={css.loading}>
           <Loading pending={isLoading} />
         </div>
-        {articles.length > 1 && (
+        {page < totalPaginate && (
           <> {!isLoading && <Button loadMore={this.hendleLoadMore} />}</>
         )}
       </>
     );
   }
 }
+
+ImageGallery.propTypes = {
+  searchValue: PropTypes.string.isRequired,
+};
 
 export default ImageGallery;

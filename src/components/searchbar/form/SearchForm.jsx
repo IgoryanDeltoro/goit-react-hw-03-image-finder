@@ -1,4 +1,6 @@
 import css from '../form/SearchForm.module.css';
+import PropTypes from 'prop-types';
+
 const SearchForm = ({ search, onSubmit, onChange }) => {
   return (
     <>
@@ -19,6 +21,12 @@ const SearchForm = ({ search, onSubmit, onChange }) => {
       </form>
     </>
   );
+};
+
+SearchForm.propTypes = {
+  search: PropTypes.string.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default SearchForm;
