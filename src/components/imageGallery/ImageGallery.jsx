@@ -29,6 +29,7 @@ class ImageGallery extends Component {
     const { page } = this.state;
     if (currentNume !== prevName) {
       this.setState({ articles: [] });
+      this.setState({ page: 1 });
     }
     if (currentNume !== prevName || currentPage !== prevPage) {
       this.setState({ isLoading: true });
