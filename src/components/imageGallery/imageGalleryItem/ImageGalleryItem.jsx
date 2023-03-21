@@ -1,15 +1,19 @@
 import css from '../imageGalleryItem/ImageGalleryItem.module.css';
+import PropTypes from 'prop-types';
 
-const ImageGalleryItem = ({ articles }) => {
+const ImageGalleryItem = ({ webformatURL, tags }) => {
   return (
     <>
-      {articles.map(({ id, webformatURL, tags }) => (
-        <li key={id} className={css.galleryItem}>
-          <img className={css.image} src={webformatURL} alt={tags} />
-        </li>
-      ))}
+      <li className={css.galleryItem}>
+        <img className={css.image} src={webformatURL} alt={tags} />
+      </li>
     </>
   );
+};
+
+ImageGalleryItem.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+  tags: PropTypes.string.isRequired,
 };
 
 export default ImageGalleryItem;
