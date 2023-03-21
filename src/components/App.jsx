@@ -5,7 +5,7 @@ import Searchbar from './searchbar/Searchbar';
 import Loading from 'components/loading/Loading';
 import apiQueries from 'components/servise/apiQueries';
 import modal from 'components/modal/modal';
-
+import { animateScroll } from 'react-scroll';
 import Button from 'components/button/Button';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -72,6 +72,15 @@ class App extends Component {
 
   hendleLoadMore = () => {
     this.setState(prevState => ({ page: prevState.page + 1 }));
+    this.smoothScroll();
+  };
+
+  smoothScroll = () => {
+    animateScroll.scrollToBottom({
+      duration: 1000,
+      delay: 10,
+      smooth: 'linear',
+    });
   };
 
   render() {
